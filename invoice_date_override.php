@@ -1,0 +1,66 @@
+<?php
+/**
+ * Invoice date override module.
+ *
+ * Updates the invoice date of orders according to several rules.
+ *
+ * @author Enzo Biggio <ebiggio@gmail.com>
+ * @version 0.0.1
+ * @licence GNU General Public License 3.0
+ */
+declare(strict_types=1);
+
+use Ebiggio\InvoiceDateOverride\Install\Installer;
+use Ebiggio\InvoiceDateOverride\Install\Uninstaller;
+
+
+class Invoice_Date_Override extends Module
+{
+    public function __construct()
+    {
+        $this->name = 'invoice_date_override';
+        $this->author = 'Enzo Biggio';
+        $this->version = '0.0.1';
+        $this->need_instance = 0;
+        $this->bootstrap = true;
+        $this->tab = 'administration';
+        $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => _PS_VERSION_];
+        $this->displayName = $this->trans('Invoice date override', [], 'Modules.InvoiceDateOverride.Admin');
+        $this->description = $this->trans('Updates the invoice date of orders according to several rules.'
+            , []
+            , 'Modules.InvoiceDateOverride.Admin'
+        );
+
+        parent::__construct();
+    }
+
+    public function install(): bool
+    {
+        $this->_clearCache('*');
+
+        if ( ! parent::install()) {
+            return false;
+        }
+
+        return (new Installer())->install($this);
+    }
+
+    public function uninstall(): bool
+    {
+        $this->_clearCache('*');
+
+        if ( ! parent::uninstall()) {
+            return false;
+        }
+
+        return (new Uninstaller())->uninstall();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isUsingNewTranslationSystem(): bool
+    {
+        return true;
+    }
+}
