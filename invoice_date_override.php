@@ -8,12 +8,20 @@
  * @version 0.0.1
  * @licence GNU General Public License 3.0
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 use Ebiggio\InvoiceDateOverride\Install\Installer;
 use Ebiggio\InvoiceDateOverride\Install\Uninstaller;
 
 
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+}
+
+/**
+ * Invoice Date Override module main class.
+ */
 class Invoice_Date_Override extends Module
 {
     public function __construct()
@@ -25,13 +33,14 @@ class Invoice_Date_Override extends Module
         $this->bootstrap = true;
         $this->tab = 'administration';
         $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => _PS_VERSION_];
+
+        parent::__construct();
+
         $this->displayName = $this->trans('Invoice date override', [], 'Modules.InvoiceDateOverride.Admin');
         $this->description = $this->trans('Updates the invoice date of orders according to several rules.'
             , []
             , 'Modules.InvoiceDateOverride.Admin'
         );
-
-        parent::__construct();
     }
 
     public function install(): bool
