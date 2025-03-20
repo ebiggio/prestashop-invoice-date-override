@@ -1,0 +1,7 @@
+invoice_date_override_settings:
+  path: /invoice_date_override/settings
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'Ebiggio\InvoiceDateOverride\Controller\BackOfficeSettings::index'
+    _legacy_controller: 'BackOfficeSettings'
+    _legacy_link: 'BackOfficeSettings'

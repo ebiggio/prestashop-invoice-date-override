@@ -13,6 +13,9 @@ declare(strict_types = 1);
 use Ebiggio\InvoiceDateOverride\Install\Installer;
 use Ebiggio\InvoiceDateOverride\Install\Uninstaller;
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
+if ( ! defined('_PS_VERSION_')) exit;
 
 $autoloadPath = __DIR__ . '/vendor/autoload.php';
 if (file_exists($autoloadPath)) {
@@ -71,5 +74,15 @@ class Invoice_Date_Override extends Module
     public function isUsingNewTranslationSystem(): bool
     {
         return true;
+    }
+
+    /**
+     * Redirects the user to the module configuration page.
+     *
+     * @return void
+     */
+    public function getContent(): void
+    {
+        Tools::redirectAdmin(SymfonyContainer::getInstance()->get('router')->generate('invoice_date_override_settings'));
     }
 }
