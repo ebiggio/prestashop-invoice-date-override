@@ -8,13 +8,36 @@
         </h3>
         <div class="card-body">
             <div class="form-wrapper">
-                {{ form_widget(SettingsForm) }}
+                {{ form_row(SettingsForm.invoice_date_override_order_status) }}
+                {{ form_row(SettingsForm.invoice_date_override_on_new_order) }}
+                {{ form_row(SettingsForm.invoice_date_override_on_status_change) }}
+                {{ form_row(SettingsForm.invoice_date_override_clear_on_unselected_status_change) }}
             </div>
         </div>
         <div class="card-footer">
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary float-right" id="save-button">
                     {{ 'Save'|trans({}, 'Admin.Actions') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <h3 class="card-header">
+            <i class="material-icons">touch_app</i> {{ 'Manual override'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}
+        </h3>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <p>{{ 'The following settings are only used when the manual override is triggered, and will not affect the process that runs based on the module settings. The manual override, however, will respect and use the order status defined on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
+            </div>
+            <p>{{ 'You can manually trigger the invoice date override by using the button below, which will update the invoice date on previously created orders that have the selected order status defined on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
+            <div class="form-wrapper">
+                {{ form_row(SettingsForm.invoice_date_override_manual_ignore_previous_date) }}
+                {{ form_row(SettingsForm.invoice_date_override_manual_clear_on_unselected_status_change) }}
+            </div>
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-warning" id="manual-override-button">
+                    {{ 'Perform manual override'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}
                 </button>
             </div>
         </div>

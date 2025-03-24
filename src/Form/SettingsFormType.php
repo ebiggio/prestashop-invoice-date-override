@@ -32,11 +32,65 @@ class SettingsFormType extends TranslatorAwareType
                     'Modules.InvoiceDateOverride.Admin'
                 ),
                 'required' => true,
-                'choices' => [
-                    $order_state_choices
-                ],
+                'choices'  => $order_state_choices,
                 'multiple' => true,
                 'expanded' => true,
+            ])
+            ->add('invoice_date_override_on_new_order', SwitchType::class, [
+                'label'    => $this->trans(
+                    'Override invoice date on new orders',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'help'     => $this->trans(
+                    'If enabled, the invoice date will be overridden when new orders are created that match the selected order status.',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'required' => false,
+            ])
+            ->add('invoice_date_override_on_status_change', SwitchType::class, [
+                'label'    => $this->trans(
+                    'Override invoice date on order status change',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'help'     => $this->trans(
+                    'If enabled, the invoice date will be overridden when the order status changes to match the selected order status.',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'required' => false,
+            ])
+            ->add(
+                'invoice_date_override_clear_on_unselected_status_change', SwitchType::class, [
+                'label'    => $this->trans(
+                    'Clear invoice date when status change to an unselected one',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'help'     => $this->trans(
+                    'If enabled, the invoice date will be cleared when the order status changes to a status that is not selected in the previous field.',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'required' => false,
+            ])
+            ->add('invoice_date_override_manual_ignore_previous_date', SwitchType::class, [
+                'label'    => $this->trans(
+                    'Ignore previous invoice date',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'help'     => $this->trans(
+                    'If checked, the manual override will ignore the previous invoice date and update it to the order creation date. Otherwise, the invoice date will be updated to the order creation date only if the invoice date is empty.',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'required' => false,
+            ])
+            ->add('invoice_date_override_manual_clear_on_unselected_status_change', SwitchType::class, [
+                'label'    => $this->trans(
+                    'Clear invoice date of orders that have a status different from the selected one(s)',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'help'     => $this->trans(
+                    'If checked, the manual override will clear the invoice date of orders that have a status different from the selected one(s).',
+                    'Modules.InvoiceDateOverride.Admin'
+                ),
+                'required' => false,
             ]);
     }
 }

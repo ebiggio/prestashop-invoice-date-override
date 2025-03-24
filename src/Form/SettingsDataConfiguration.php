@@ -32,8 +32,13 @@ class SettingsDataConfiguration implements DataConfigurationInterface
     {
         $configuration = [];
 
-//        foreach (ModuleSettings::SETTINGS as $settingName => $settingValue) {
-//        }
+        foreach (ModuleSettings::SETTINGS as $settingName => $settingValue) {
+            if ($settingName === 'INVOICE_DATE_OVERRIDE_ORDER_STATUS') {
+                $configuration[strtolower($settingName)] = json_decode($this->configuration->get($settingName), true);
+            } else {
+                $configuration[strtolower($settingName)] = (bool)$this->configuration->get($settingName);
+            }
+        }
 
         return $configuration;
     }
@@ -42,7 +47,7 @@ class SettingsDataConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             foreach ($configuration as $key => $value) {
-                $this->configuration->set(strtoupper($key), $value);
+                $this->configuration->set(strtoupper($key), is_array($value) ? json_encode($value) : $value);
             }
         }
 
