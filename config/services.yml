@@ -20,14 +20,14 @@ services:
       - 'Ebiggio\InvoiceDateOverride\Form\SettingsFormType'
       - 'Settings'
 
-  ebiggio.invoice_date_override.form.settings_data_configuration:
-    public: true
-    class: Ebiggio\InvoiceDateOverride\Form\SettingsDataConfiguration
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-
   ebiggio.invoice_date_override.form.settings_data_provider:
     public: true
     class: Ebiggio\InvoiceDateOverride\Form\SettingsDataProvider
     arguments:
       - '@ebiggio.invoice_date_override.form.settings_data_configuration'
+
+  ebiggio.invoice_date_override.form.settings_data_configuration:
+    public: true
+    class: Ebiggio\InvoiceDateOverride\Form\SettingsDataConfiguration
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
