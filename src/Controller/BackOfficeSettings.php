@@ -20,15 +20,15 @@ class BackOfficeSettings extends FrameworkBundleAdminController
         $configurationForm->handleRequest($request);
 
         if ($configurationForm->isSubmitted() && $configurationForm->isValid()) {
-            $formErrors = $formHandler->save($configurationForm->getData());
+            $form_errors = $formHandler->save($configurationForm->getData());
 
-            if (empty($formErrors)) {
+            if (empty($form_errors)) {
                 $this->addFlash('success', $this->trans('Settings updated successfully.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('invoice_date_override_settings');
             }
 
-            foreach ($formErrors as $key => $error) {
+            foreach ($form_errors as $key => $error) {
                 $configurationForm->get($key)->addError(new FormError($error));
             }
 
