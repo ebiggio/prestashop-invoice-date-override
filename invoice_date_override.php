@@ -40,7 +40,8 @@ class Invoice_Date_Override extends Module
         parent::__construct();
 
         $this->displayName = $this->trans('Invoice date override', [], 'Modules.InvoiceDateOverride.Admin');
-        $this->description = $this->trans('Updates the invoice date of orders according to several rules.'
+        $this->description = $this->trans(
+            'Updates the invoice date of orders according to several rules.'
             , []
             , 'Modules.InvoiceDateOverride.Admin'
         );
@@ -84,5 +85,70 @@ class Invoice_Date_Override extends Module
     public function getContent(): void
     {
         Tools::redirectAdmin(SymfonyContainer::getInstance()->get('router')->generate('invoice_date_override_settings'));
+    }
+
+    /**
+     * Hook that fires after an order is validated by PrestaShop.
+     *
+     * @param array $params The parameters passed to the hook.
+     *
+     * @return void
+     */
+    public function hookActionValidateOrderAfter(array $params): void
+    {
+        if ( ! Configuration::get('INVOICE_DATE_OVERRIDE_ON_NEW_ORDER')) {
+            return;
+        }
+
+        $order = $params['order'];
+        $order_status = $params['orderStatus'];
+
+        if ( ! in_array(
+            (string)$order_status->id,
+            json_decode(Configuration::get('INVOICE_DATE_OVERRIDE_ORDER_STATUS'), true),
+            true)) {
+            return;
+        }
+
+        $order->invoice_date = $order->date_add;
+        $order->update();
+    }
+
+
+    /**
+     * Hook that fires after an order history is added, which is when the order status changes.
+     *
+     * @param array $params The parameters passed to the hook.
+     *
+     * @return void
+     */
+    public function hookActionOrderHistoryAddAfter(array $params): void
+    {
+        if ( ! Configuration::get('INVOICE_DATE_OVERRIDE_ON_STATUS_CHANGE')
+            && ! Configuration::get('INVOICE_DATE_OVERRIDE_CLEAR_ON_UNSELECTED_STATUS_CHANGE')) {
+            return;
+        }
+
+        $order_history = $params['order_history'];
+
+        $order = new Order((int)$order_history->id_order);
+        $new_order_status_id = (string)$order_history->id_order_state;
+        $is_selected_status = in_array(
+            $new_order_status_id,
+            json_decode(Configuration::get('INVOICE_DATE_OVERRIDE_ORDER_STATUS'), true),
+            true
+        );
+
+        if (Configuration::get('INVOICE_DATE_OVERRIDE_ON_STATUS_CHANGE') && $is_selected_status) {
+            $order->invoice_date = $order_history->date_add;
+            $order->update();
+
+            return;
+        }
+
+        if (Configuration::get('INVOICE_DATE_OVERRIDE_CLEAR_ON_UNSELECTED_STATUS_CHANGE') && ! $is_selected_status) {
+            $order->invoice_date = null;
+            $order->update();
+        }
     }
 }

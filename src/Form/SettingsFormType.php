@@ -53,7 +53,7 @@ class SettingsFormType extends TranslatorAwareType
                     'Modules.InvoiceDateOverride.Admin'
                 ),
                 'help'     => $this->trans(
-                    'If enabled, the invoice date will be overridden when the order status changes to match the selected order status. The invoice date will be set to the order status change date.',
+                    'If enabled, the invoice date will be overridden when the order status changes to the selected order status in the previous field. This event will be triggered for each order status change that matches the selected order status. The invoice date will be set to the order status change date.',
                     'Modules.InvoiceDateOverride.Admin'
                 ),
                 'required' => false,
