@@ -34,7 +34,7 @@ class Installer
     {
         $hooks = [
             'actionValidateOrderAfter',
-            'actionOrderStatusPostUpdate'
+            'actionOrderHistoryAddAfter'
         ];
 
         return $module->registerHook($hooks);
