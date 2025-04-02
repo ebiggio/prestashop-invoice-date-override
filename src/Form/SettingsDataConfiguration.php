@@ -8,6 +8,7 @@ use Ebiggio\InvoiceDateOverride\Config\ModuleSettings;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Context;
+use OrderState;
 
 class SettingsDataConfiguration implements DataConfigurationInterface
 {
@@ -32,11 +33,11 @@ class SettingsDataConfiguration implements DataConfigurationInterface
     {
         $configuration = [];
 
-        foreach (ModuleSettings::SETTINGS as $settingName => $settingValue) {
-            if ($settingName === 'INVOICE_DATE_OVERRIDE_ORDER_STATUS') {
-                $configuration[strtolower($settingName)] = json_decode($this->configuration->get($settingName), true);
+        foreach (ModuleSettings::SETTINGS as $settings_name => $settings_value) {
+            if ('INVOICE_DATE_OVERRIDE_ORDER_STATUS' === $settings_name) {
+                $configuration[strtolower($settings_name)] = json_decode($this->configuration->get($settings_name), true);
             } else {
-                $configuration[strtolower($settingName)] = (bool)$this->configuration->get($settingName);
+                $configuration[strtolower($settings_name)] = (bool)$this->configuration->get($settings_name);
             }
         }
 
@@ -46,8 +47,13 @@ class SettingsDataConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration): array
     {
         if ($this->validateConfiguration($configuration)) {
-            foreach ($configuration as $key => $value) {
-                $this->configuration->set(strtoupper($key), is_array($value) ? json_encode($value) : $value);
+            foreach ($configuration as $settings_name => $settings_value) {
+                // We're not interested in saving the manual settings, since they are intended to be defined on the fly
+                if (str_contains($settings_name, 'manual')) {
+                    continue;
+                }
+
+                $this->configuration->set(strtoupper($settings_name), is_array($settings_value) ? json_encode($settings_value) : $settings_value);
             }
         }
 
@@ -64,8 +70,55 @@ class SettingsDataConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration): bool
     {
         $context = Context::getContext();
-        $isValidConfiguration = true;
+        $is_valid_configuration = true;
 
-        return $isValidConfiguration;
+        foreach ($configuration as $settings_name => $settings_value) {
+            // We don't validate the manual settings
+            if (str_contains($settings_name, 'manual')) {
+                continue;
+            }
+
+            // We check if the form fields exist in the module settings
+            if ( ! isset(ModuleSettings::SETTINGS[strtoupper($settings_name)])) {
+                return false;
+            }
+
+            if ('invoice_date_override_order_status' === $settings_name) {
+                // At least one order status must be selected. We also check if the setting is an array
+                if (empty($settings_value) || ! is_array($settings_value)) {
+                    $this->errors['invoice_date_override_order_status'] = $context->getTranslator()->trans(
+                        'At least one order status must be selected for the invoice date override. If you would like to avoid overriding the invoice date, please disable the module.',
+                        [],
+                        'Modules.InvoiceDateOverride.Admin'
+                    );
+                    $is_valid_configuration = false;
+                }
+
+                $order_states = OrderState::getOrderStates(Context::getContext()->language->id);
+                $order_states_ids = array_column($order_states, 'id_order_state');
+                // Check if the selected order statuses are valid
+                foreach ($settings_value as $potential_order_status_id) {
+                    if ( ! in_array($potential_order_status_id, $order_states_ids)) {
+                        $this->errors['invoice_date_override_order_status'] = $context->getTranslator()->trans(
+                            'The selected order status is not valid. Please select a valid order status.',
+                            [],
+                            'Modules.InvoiceDateOverride.Admin'
+                        );
+                        $is_valid_configuration = false;
+                    }
+                }
+            } else {
+                // The rest of the settings, behave like a "boolean switch", so their values can be either `true` or `false`
+                if ( ! in_array($settings_value, [true, false], true)) {
+                    $this->errors[$settings_name] = $context->getTranslator()->trans(
+                        'The value is not valid.',
+                        [],
+                        'Modules.InvoiceDateOverride.Admin'
+                    );
+                }
+            }
+        }
+
+        return $is_valid_configuration;
     }
 }
