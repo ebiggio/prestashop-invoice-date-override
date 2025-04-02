@@ -16,8 +16,8 @@ class Uninstaller
      */
     public function uninstall(): bool
     {
-        foreach (ModuleSettings::SETTINGS as $settingName => $settingValue) {
-            if ( ! Configuration::deleteByName($settingName)) {
+        foreach (ModuleSettings::SETTINGS as $setting_name) {
+            if ( ! Configuration::deleteByName($setting_name)) {
                 return false;
             }
         }

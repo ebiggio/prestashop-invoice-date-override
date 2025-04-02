@@ -47,8 +47,8 @@ class Installer
      */
     private function saveDefaultSettings(): bool
     {
-        foreach (ModuleSettings::SETTINGS as $settingName => $settingValue) {
-            if ( ! Configuration::updateValue($settingName, $settingValue)) {
+        foreach (ModuleSettings::SETTINGS as $setting_name => $setting_value) {
+            if ( ! Configuration::updateValue($setting_name, $setting_value)) {
                 return false;
             }
         }
