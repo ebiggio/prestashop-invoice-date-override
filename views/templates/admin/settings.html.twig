@@ -31,6 +31,9 @@
                 <p>{{ 'The following settings are only used when the manual override is triggered, and will not affect the process that runs based on the module settings. The manual override, however, will respect and use the order status defined on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
             </div>
             <p>{{ 'You can manually trigger the invoice date override by using the button below, which will update the invoice date on previously created orders that have the selected order status defined on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
+            <div class="alert alert-warning">
+                <p>{{ 'This operation is intended to be used if you have orders that won\'t change their status but that need their invoice date updated. This usually happens when using the module on a store that has orders created before the module logic was enabled. Depending on the number of orders, the manual override may take a while to finish and may cause a timeout. Use it with caution.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
+            </div>
             <div class="form-wrapper">
                 {{ form_row(SettingsForm.invoice_date_override_manual_ignore_previous_date) }}
                 {{ form_row(SettingsForm.invoice_date_override_manual_clear_on_unselected_status_change) }}
