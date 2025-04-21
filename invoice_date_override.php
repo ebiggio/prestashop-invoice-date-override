@@ -121,6 +121,7 @@ class Invoice_Date_Override extends Module
      * @param array $params The parameters passed to the hook.
      *
      * @return void
+     * @throws Exception
      */
     public function hookActionOrderHistoryAddAfter(array $params): void
     {

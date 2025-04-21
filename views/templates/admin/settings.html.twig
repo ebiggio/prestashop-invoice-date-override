@@ -28,7 +28,7 @@
         </h3>
         <div class="card-body">
             <div class="alert alert-info">
-                <p>{{ 'The following settings are only used when the manual override is triggered, and will not affect the process that runs based on the module settings. The manual override, however, will respect and use the order status defined on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
+                <p>{{ 'The following settings are only used when the manual override is triggered, and will not affect the process that runs based on the module settings. The manual override, however, will respect and use the order status saved on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
             </div>
             <p>{{ 'You can manually trigger the invoice date override by using the button below, which will update the invoice date on previously created orders that have the selected order status defined on the module settings.'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}</p>
             <div class="alert alert-warning">
@@ -47,4 +47,57 @@
         </div>
     </div>
     {{ form_end(SettingsForm) }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const button = document.getElementById('manual-override-button');
+
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const confirmed = confirm("{{ 'Are you sure you want to perform the manual override?'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}");
+                if (!confirmed) return;
+
+                const ignorePreviousCheckbox = document.querySelector('[name="form[invoice_date_override_manual_ignore_previous_date]"]');
+                const clearOnUnselectedCheckbox = document.querySelector('[name="form[invoice_date_override_manual_clear_on_unselected_status_change]"]');
+                const minRangeInput = document.querySelector('[name="form[invoice_date_override_manual_order_id_ranges][min_field]"]');
+                const maxRangeInput = document.querySelector('[name="form[invoice_date_override_manual_order_id_ranges][max_field]"]');
+
+                const data = {
+                    ignore_previous_date: ignorePreviousCheckbox?.checked ?? false,
+                    clear_on_unselected_status_change: clearOnUnselectedCheckbox?.checked ?? false,
+                    order_id_min_range: minRangeInput?.value ?? '',
+                    order_id_max_range: maxRangeInput?.value ?? '',
+                };
+
+                button.disabled = true;
+                button.textContent = "{{ 'Processing...'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}";
+
+                try {
+                    const response = await fetch('{{ path('admin_module_invoice_date_override_manual_override') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest', // For Symfony to treat it as AJAX
+                        },
+                        body: JSON.stringify(data),
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw result;
+                    }
+
+                    window.showSuccessMessage(result.message);
+                } catch (err) {
+                    const message = err?.message || "{{ 'An unexpected error occurred.'|trans({}, 'Admin.Notifications.Error') }}";
+                    window.showErrorMessage(message);
+                } finally {
+                    button.disabled = false;
+                    button.textContent = "{{ 'Perform manual override'|trans({}, 'Modules.InvoiceDateOverride.Admin') }}";
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

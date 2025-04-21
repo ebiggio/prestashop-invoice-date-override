@@ -5,3 +5,11 @@ invoice_date_override_settings:
     _controller: 'Ebiggio\InvoiceDateOverride\Controller\BackOfficeSettings::index'
     _legacy_controller: 'BackOfficeSettings'
     _legacy_link: 'BackOfficeSettings'
+
+admin_module_invoice_date_override_manual_override:
+  path: /invoice_date_override/manual_override
+  methods: [ POST ]
+  defaults:
+    _controller: 'Ebiggio\InvoiceDateOverride\Controller\ManualOverride::index'
+    _legacy_controller: 'ManualOverride'
+    _legacy_link: 'ManualOverride'
