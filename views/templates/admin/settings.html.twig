@@ -36,7 +36,6 @@
             </div>
             <div class="form-wrapper">
                 {{ form_row(SettingsForm.invoice_date_override_manual_ignore_previous_date) }}
-                {{ form_row(SettingsForm.invoice_date_override_manual_clear_on_unselected_status_change) }}
                 {{ form_row(SettingsForm.invoice_date_override_manual_order_id_ranges) }}
             </div>
             <div class="d-flex justify-content-center">
@@ -58,13 +57,14 @@
                 if (!confirmed) return;
 
                 const ignorePreviousCheckbox = document.querySelector('[name="form[invoice_date_override_manual_ignore_previous_date]"]');
-                const clearOnUnselectedCheckbox = document.querySelector('[name="form[invoice_date_override_manual_clear_on_unselected_status_change]"]');
                 const minRangeInput = document.querySelector('[name="form[invoice_date_override_manual_order_id_ranges][min_field]"]');
                 const maxRangeInput = document.querySelector('[name="form[invoice_date_override_manual_order_id_ranges][max_field]"]');
 
                 const data = {
-                    ignore_previous_date: ignorePreviousCheckbox?.checked ?? false,
-                    clear_on_unselected_status_change: clearOnUnselectedCheckbox?.checked ?? false,
+                    // In PrestaShop 8, a SwitchType class looks like a checkbox with "Yes" and "No" labels, but internally
+                    // is a radio button. And when checked, its "checked" value is false, and when unchecked, its "checked" value is true.
+                    // So we need to invert the value to get the correct state.
+                    ignore_previous_date: !ignorePreviousCheckbox?.checked,
                     order_id_min_range: minRangeInput?.value ?? '',
                     order_id_max_range: maxRangeInput?.value ?? '',
                 };
@@ -99,5 +99,4 @@
             });
         });
     </script>
-
 {% endblock %}

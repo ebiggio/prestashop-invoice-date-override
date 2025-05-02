@@ -82,17 +82,6 @@ class SettingsFormType extends TranslatorAwareType
                 ),
                 'required' => false
             ])
-            ->add('invoice_date_override_manual_clear_on_unselected_status_change', SwitchType::class, [
-                'label'    => $this->trans(
-                    'Clear invoice date of orders that have a status different from the selected one(s)',
-                    'Modules.InvoiceDateOverride.Admin'
-                ),
-                'help'     => $this->trans(
-                    'If checked, the manual override will clear the invoice date of orders that have a status different from the selected one(s).',
-                    'Modules.InvoiceDateOverride.Admin'
-                ),
-                'required' => false
-            ])
             ->add('invoice_date_override_manual_order_id_ranges', NumberMinMaxFilterType::class, [
                 'label'    => $this->trans(
                     'Limit manual override to orders in this range',
