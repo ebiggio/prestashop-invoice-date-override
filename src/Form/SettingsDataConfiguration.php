@@ -41,6 +41,9 @@ class SettingsDataConfiguration implements DataConfigurationInterface
             }
         }
 
+        // Default values for the manual setting of ignoring previous invoice date
+        $configuration['invoice_date_override_manual_ignore_previous_date'] = false;
+
         return $configuration;
     }
 
