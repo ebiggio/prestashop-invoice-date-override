@@ -31,3 +31,9 @@ services:
     class: Ebiggio\InvoiceDateOverride\Form\SettingsDataConfiguration
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  ebiggio.invoice_date_override.service.order_service:
+    public: true
+    class: Ebiggio\InvoiceDateOverride\Service\OrderService
+    arguments:
+      - '@doctrine.dbal.default_connection'
