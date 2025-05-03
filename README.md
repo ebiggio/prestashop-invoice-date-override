@@ -1,4 +1,4 @@
-# Invoice Date Override module for PrestaShop
+# <img src="logo.png" width="32" height="32" alt="Module logo"> Invoice Date Override module for PrestaShop
 
 ## Description
 
