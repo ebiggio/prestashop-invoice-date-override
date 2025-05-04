@@ -5,7 +5,7 @@
  * Updates the invoice date of orders according to several rules.
  *
  * @author Enzo Biggio <ebiggio@gmail.com>
- * @version 0.0.1
+ * @version 1.0.0
  * @licence GNU General Public License 3.0
  */
 declare(strict_types = 1);
@@ -31,7 +31,7 @@ class Invoice_Date_Override extends Module
     {
         $this->name = 'invoice_date_override';
         $this->author = 'Enzo Biggio';
-        $this->version = '0.0.1';
+        $this->version = '1.0.0';
         $this->need_instance = 0;
         $this->bootstrap = true;
         $this->tab = 'administration';

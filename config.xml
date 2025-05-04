@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>invoice_date_override</name>
+    <displayName><![CDATA[Invoice date override]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[Updates the invoice date of orders according to several rules.]]></description>
+    <author><![CDATA[Enzo Biggio]]></author>
+    <tab><![CDATA[administration]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+</module>
