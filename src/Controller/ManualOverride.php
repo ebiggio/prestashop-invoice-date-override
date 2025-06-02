@@ -10,11 +10,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Configuration;
 use Context;
+use Exception;
 
 class ManualOverride extends FrameworkBundleAdminController
 {
     /**
      * @throws ContainerNotFoundException
+     * @throws Exception
      */
     public function index(Request $request): JsonResponse
     {

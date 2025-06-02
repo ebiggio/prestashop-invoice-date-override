@@ -62,7 +62,7 @@ class OrderService
         $updated = 0;
         if ( ! empty($matching_ids)) {
             $updated = $this->connection->executeStatement(
-                "UPDATE {$this->table} SET invoice_date = date_add WHERE id_order IN (:ids)",
+                "UPDATE $this->table SET invoice_date = date_add WHERE id_order IN (:ids)",
                 ['ids' => $matching_ids],
                 ['ids' => Connection::PARAM_INT_ARRAY]
             );
